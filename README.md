@@ -2,6 +2,32 @@
 
 把已有 IT 系统源码转换为可直接交付的产品讲解 HTML PPT 或中文讲解视频。技能启动后会先要求用户选择一种输出形式，再进入对应流水线，不要求目标系统能够成功运行。
 
+## 输出效果展示
+
+### HTML PPT
+
+| 产品功能讲解页 | 平台能力总结页 |
+|---|---|
+| ![PPT 产品功能讲解效果](media/ppt01.png) | ![PPT 平台能力总结效果](media/ppt02.png) |
+
+PPT 模式输出 1920x1080 的单文件 HTML deck，以浅色咨询风格呈现架构、流程与核心功能。界面页采用左侧机制讲解、右侧系统截图的布局，并通过编号和高亮框建立对应关系。
+
+### 中文讲解视频
+
+| 系统界面讲解效果 | 架构与流程讲解效果 |
+|---|---|
+| ![视频系统界面讲解效果](media/video01.jpg) | ![视频架构与流程讲解效果](media/video02.jpg) |
+
+视频模式输出 1920x1080、30fps 的 H.264 MP4，包含微软云扬中文配音、硬字幕、章节标识、界面聚焦动画以及架构和流程图解。
+
+## 完整演示视频
+
+<video src="https://github.com/sharptoolbox/code-walkthrough-ppt-video/raw/refs/heads/main/media/%E8%BF%9C%E8%A1%8CAI-PaaS_%E5%BA%94%E7%94%A8%E4%B8%AD%E5%BF%83%E6%BC%94%E7%A4%BA%E8%A7%86%E9%A2%91.mp4" controls width="100%" title="远行 AI-PaaS 应用中心演示视频"></video>
+
+[![点击播放远行 AI-PaaS 应用中心完整演示视频](media/video01.jpg)](https://github.com/sharptoolbox/code-walkthrough-ppt-video/raw/refs/heads/main/media/%E8%BF%9C%E8%A1%8CAI-PaaS_%E5%BA%94%E7%94%A8%E4%B8%AD%E5%BF%83%E6%BC%94%E7%A4%BA%E8%A7%86%E9%A2%91.mp4)
+
+> GitHub 客户端或部分浏览器可能不显示内嵌播放器。此时点击上方封面，或[直接播放与下载完整 MP4](https://github.com/sharptoolbox/code-walkthrough-ppt-video/raw/refs/heads/main/media/%E8%BF%9C%E8%A1%8CAI-PaaS_%E5%BA%94%E7%94%A8%E4%B8%AD%E5%BF%83%E6%BC%94%E7%A4%BA%E8%A7%86%E9%A2%91.mp4)。
+
 ## 两种输出
 
 | 模式 | 主要产物 | 适合场景 | 核心规格 |
@@ -96,6 +122,7 @@ code-walkthrough-ppt-video/
 ├── LICENSE                  MIT 许可证
 ├── NOTICE                   第三方组件声明
 ├── agents/openai.yaml       Codex 技能列表元数据
+├── media/                    README 效果图与完整演示视频
 ├── ppt/
 │   ├── WORKFLOW.md          PPT 完整工作流
 │   ├── assets/              deck、UI、图表与架构模板
