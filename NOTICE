@@ -1,0 +1,15 @@
+code-walkthrough-ppt-video
+Copyright (c) 2026 人月聊IT
+
+This distribution includes Apache ECharts 5.x in:
+
+  ppt/assets/templates/echarts.min.js
+
+Apache ECharts is licensed under the Apache License, Version 2.0.
+The complete license text is included at:
+
+  ppt/assets/templates/LICENSE-Apache-2.0.txt
+
+The remaining workflow documents, scripts, UI shells, deck templates, and
+Remotion project templates are distributed under the repository MIT License,
+unless a file states otherwise.

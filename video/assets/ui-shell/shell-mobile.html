@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<!--
+  ============================================================================
+   移动端 / 小程序页面 · 深色骨架（1600×900 画布，手机居中）
+  ============================================================================
+   为什么把手机放在深色大画布中间：视频画面是 1920×1080 的深色场景，
+   如果整个画布铺满白色手机界面，缩到视频里字会太小；居中放一台手机，
+   文字尺寸合适，画面也统一。
+
+   用法：复制 → 改标题栏文案 / 卡片字段 / 状态标签 / 底部标签栏 → shoot_page.py
+   不需要右侧"页面说明"那块的话，直接删掉 <aside> 整段即可。
+   ============================================================================
+-->
+<head>
+<meta charset="utf-8">
+<title>界面示意</title>
+<style>
+  :root{
+    --bg:#0f1626;
+    --phone:#131b2b;
+    --card:#1b2436;
+    --line:#2a3548;
+    --text:#e6eaf2;
+    --text2:#c3cbda;
+    --dim:#8a94a6;
+    --primary:#1565c0;
+    --primary-lite:#4a9be8;
+    --accent:#26c6a6;
+    --warn:#e8a33d;
+    --danger:#e05a5a;
+    --ok:#38b98a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1600px;height:900px;overflow:hidden}
+  body{
+    background:radial-gradient(900px 620px at 42% 50%, #1a2540 0%, var(--bg) 68%);
+    color:var(--text);font-family:"Microsoft YaHei","Microsoft YaHei UI","PingFang SC",sans-serif;
+    font-size:16px;display:flex;align-items:center;justify-content:center;gap:70px;
+  }
+
+  /* ---------------- 手机外壳 ---------------- */
+  .phone{
+    width:414px;height:812px;border-radius:40px;background:var(--phone);
+    border:1px solid var(--line);box-shadow:0 40px 100px rgba(0,0,0,.62),0 0 0 10px #0b111d;
+    display:flex;flex-direction:column;overflow:hidden;flex:0 0 auto;
+  }
+  .statusbar{height:40px;flex:0 0 40px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 26px;font-size:14px;color:var(--text2)}
+  .navbar{height:52px;flex:0 0 52px;display:flex;align-items:center;justify-content:center;
+    border-bottom:1px solid var(--line);font-size:18px;font-weight:600;letter-spacing:1px;position:relative}
+  .navbar .back{position:absolute;left:20px;color:var(--text2);font-size:18px}
+  .navbar .more{position:absolute;right:20px;color:var(--dim);letter-spacing:2px}
+
+  .content{flex:1;min-height:0;overflow:hidden;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+  .search{height:40px;flex:0 0 40px;border-radius:20px;background:var(--card);border:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;padding:0 16px;color:var(--dim);font-size:15px}
+  .tabs{display:flex;gap:8px;flex:0 0 34px;align-items:center}
+  .tab{height:32px;padding:0 16px;border-radius:16px;background:var(--card);border:1px solid var(--line);
+    color:var(--text2);font-size:15px;display:flex;align-items:center}
+  .tab.on{background:rgba(38,198,166,.16);border-color:rgba(38,198,166,.5);color:var(--accent);font-weight:600}
+
+  /* ---------------- 卡片列表 ---------------- */
+  .list{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+    display:flex;flex-direction:column;gap:9px}
+  .item .r1{display:flex;align-items:center;gap:10px}
+  .item .no{font-size:16px;font-weight:600;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+  .item .sp{flex:1}
+  .item .r2{display:flex;align-items:center;font-size:15px;color:var(--text2)}
+  .item .r2 .amt{margin-left:auto;color:var(--text);font-variant-numeric:tabular-nums;font-weight:600}
+  .item .r3{display:flex;align-items:center;gap:14px;font-size:14px;color:var(--dim)}
+  .st{font-size:13px;padding:2px 10px;border-radius:10px;border:1px solid}
+  .st.ok{color:var(--ok);border-color:rgba(56,185,138,.45);background:rgba(56,185,138,.12)}
+  .st.wait{color:var(--warn);border-color:rgba(232,163,61,.45);background:rgba(232,163,61,.12)}
+  .st.run{color:var(--primary-lite);border-color:rgba(74,155,232,.45);background:rgba(74,155,232,.12)}
+  .st.bad{color:var(--danger);border-color:rgba(224,90,90,.45);background:rgba(224,90,90,.12)}
+
+  .tabbar{height:64px;flex:0 0 64px;border-top:1px solid var(--line);display:flex;
+    background:#111a29}
+  .tabbar .t{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:5px;color:var(--dim);font-size:13px}
+  .tabbar .t i{width:20px;height:20px;border-radius:6px;background:#2c3852;display:block}
+  .tabbar .t.on{color:var(--accent)}
+  .tabbar .t.on i{background:var(--accent)}
+
+  /* ---------------- 右侧说明（可删） ---------------- */
+  aside{width:470px;flex:0 0 470px}
+  aside .k{font-size:14px;letter-spacing:4px;color:var(--accent)}
+  aside h2{font-size:40px;font-weight:700;margin:16px 0 26px;letter-spacing:2px;line-height:1.28}
+  aside ul{list-style:none;display:flex;flex-direction:column;gap:18px}
+  aside li{display:grid;grid-template-columns:132px 1fr;gap:14px;font-size:19px;
+    color:var(--text2);line-height:1.5;align-items:start}
+  aside li b{color:var(--text);font-weight:600;white-space:nowrap;position:relative;padding-left:16px}
+  aside li b::before{content:"";position:absolute;left:0;top:11px;width:6px;height:6px;
+    border-radius:50%;background:var(--accent)}
+</style>
+</head>
+<body>
+
+  <!-- ================= 手机 ================= -->
+  <div class="phone">
+    <div class="statusbar"><span>11:20</span><span>示例网络　100%</span></div>
+
+    <div class="navbar">
+      <span class="back">‹</span>
+      我的订单                                   <!-- ← 页面标题 -->
+      <span class="more">···</span>
+    </div>
+
+    <div class="content">
+      <div class="search">🔍　搜索订单号 / 客户名称</div>
+
+      <div class="tabs">
+        <div class="tab on">全部</div>              <!-- ← 标签页 -->
+        <div class="tab">待审核</div>
+        <div class="tab">履约中</div>
+        <div class="tab">已完成</div>
+      </div>
+
+      <div class="list">
+        <!-- ↓↓↓ 仿真数据 ↓↓↓ -->
+        <div class="item">
+          <div class="r1"><span class="no">SO20261013001</span><span class="sp"></span>
+            <span class="st ok">已审核</span></div>
+          <div class="r2">示例客户甲有限公司<span class="amt">1,280,000.00</span></div>
+          <div class="r3"><span>合同 HT2026-0187</span><span>2026-10-13</span></div>
+        </div>
+        <div class="item">
+          <div class="r1"><span class="no">SO20261013002</span><span class="sp"></span>
+            <span class="st wait">待审核</span></div>
+          <div class="r2">示例客户乙科技有限公司<span class="amt">564,000.00</span></div>
+          <div class="r3"><span>合同 HT2026-0188</span><span>2026-10-13</span></div>
+        </div>
+        <div class="item">
+          <div class="r1"><span class="no">SO20261012007</span><span class="sp"></span>
+            <span class="st run">履约中</span></div>
+          <div class="r2">示例客户丙信息技术<span class="amt">3,020,000.00</span></div>
+          <div class="r3"><span>合同 HT2026-0179</span><span>2026-10-12</span></div>
+        </div>
+        <div class="item">
+          <div class="r1"><span class="no">SO20261011011</span><span class="sp"></span>
+            <span class="st bad">已驳回</span></div>
+          <div class="r2">示例客户戊软件服务<span class="amt">245,000.00</span></div>
+          <div class="r3"><span>合同 HT2026-0171</span><span>2026-10-11</span></div>
+        </div>
+        <div class="item">
+          <div class="r1"><span class="no">SO20261010004</span><span class="sp"></span>
+            <span class="st ok">已完成</span></div>
+          <div class="r2">示例客户庚数据服务<span class="amt">682,000.00</span></div>
+          <div class="r3"><span>合同 HT2026-0162</span><span>2026-10-10</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabbar">
+      <div class="t"><i></i>首页</div>
+      <div class="t on"><i></i>订单</div>          <!-- ← 当前标签 -->
+      <div class="t"><i></i>消息</div>
+      <div class="t"><i></i>我的</div>
+    </div>
+  </div>
+
+  <!-- ================= 右侧说明（不需要可整段删掉）================= -->
+  <aside>
+    <div class="k">MOBILE</div>
+    <h2>移动端订单查询</h2>
+    <ul>
+      <li><b>列表即入口</b>　一屏看完订单号、客户、金额与状态</li>
+      <li><b>状态可筛选</b>　顶部标签页按流转阶段切换</li>
+      <li><b>与后台同源</b>　同一套状态枚举，不会各说各话</li>
+    </ul>
+  </aside>
+
+</body>
+</html>

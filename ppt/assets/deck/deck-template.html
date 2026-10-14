@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<style>
+/* ===================== 全局 ===================== */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#5A5F66;overflow:hidden}
+body{font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB","Source Han Sans SC","Noto Sans SC","Helvetica Neue",Arial,sans-serif;
+     -webkit-font-smoothing:antialiased}
+.stage{position:absolute;top:0;left:0;width:1920px;height:1080px;transform-origin:top left}
+
+/* ===================== 页面骨架（硬性，不得违反） ===================== */
+.page{display:none;position:relative;width:1920px;height:1080px;background:#FFFFFF;overflow:hidden}
+.page.on{display:block}
+.ptitle{position:absolute;left:20px;top:20px;width:1600px;height:150px;margin:0;
+        display:flex;align-items:center;font-size:48px;font-weight:700;color:#333333;line-height:1.2}
+.kicker{position:absolute;right:20px;top:96px;font-size:18px;font-weight:600;color:#A3A3A3;
+        letter-spacing:4px;text-transform:uppercase}
+.hr{position:absolute;left:0;top:170px;width:1920px;height:5px;background:#000000}
+.pfoot{position:absolute;left:20px;bottom:20px;font-size:14px;color:#A3A3A3}
+
+/* ---------------- 截图页：左 504 + 间距 60 + 右 1316 ---------------- */
+.lcol{position:absolute;left:20px;top:175px;width:504px;height:885px}
+.fname{font-size:28px;font-weight:700;color:#333333;line-height:1.35}
+.lsep{height:1px;background:#CCCCCC;margin:16px 0}
+.fvalue{font-size:20px;font-weight:400;color:#777777;line-height:1.65}
+.pts{margin-top:28px;display:flex;flex-direction:column;gap:20px}
+.pt{display:flex;gap:14px;align-items:flex-start}
+.dot{width:30px;height:30px;border-radius:50%;flex:0 0 30px;color:#fff;font-size:16px;font-weight:700;
+     display:flex;align-items:center;justify-content:center;line-height:1}
+.dot.red{background:#CC0000}
+.dot.blue{background:#006393}
+.pt b{display:block;font-size:22px;font-weight:700;color:#333333;line-height:1.35}
+.pt p{margin:6px 0 0;font-size:20px;font-weight:400;color:#555555;line-height:1.5}
+.bound{position:absolute;left:0;bottom:36px;width:504px;padding-left:16px;border-left:3px solid #E8A33D;
+       font-size:20px;color:#A9720B;line-height:1.5}
+.bound span{font-weight:500}
+.shot-slot{position:absolute;left:584px;top:247.5px;width:1316px;height:740px;
+           border:1px solid #CCCCCC;border-radius:2px;overflow:hidden;background:#FFFFFF}
+.shot-slot img{display:block;width:1316px;height:740px;object-fit:cover}
+.shot-slot .anno{position:absolute;inset:0;width:1316px;height:740px;pointer-events:none}
+
+/* ---------------- 分栏（图形）：左 700 + 间距 60 + 右 1120×700 ---------------- */
+.dcol{position:absolute;left:20px;top:175px;width:700px;height:885px}
+.fig{position:absolute;left:780px;top:175px;width:1120px;height:885px;
+     display:flex;align-items:center;justify-content:center}
+.full{position:absolute;left:20px;top:175px;width:1880px;height:885px;
+      display:flex;align-items:center;justify-content:center}
+
+/* 分栏左栏的通用段落（图形页用） */
+.dcol h3{margin:0 0 16px;font-size:28px;font-weight:700;color:#333333;line-height:1.35}
+.dcol p{margin:0 0 20px;font-size:21px;font-weight:400;color:#555555;line-height:1.65}
+.dcol ul{margin:0;padding:0;list-style:none}
+.dcol li{position:relative;padding-left:26px;margin-bottom:16px;font-size:21px;color:#333333;line-height:1.55}
+.dcol li::before{content:"";position:absolute;left:0;top:11px;width:8px;height:8px;border-radius:50%;
+                 background:#006393}
+.dcol li em{font-style:normal;color:#777777;display:block;font-size:20px;margin-top:4px}
+
+/* 关键数字条（图形页左栏底部常用） */
+.stats{position:absolute;left:0;bottom:0;width:700px;display:flex;gap:64px;
+       border-top:1px solid #CCCCCC;padding-top:22px}
+.stats .num{font-size:56px;font-weight:700;color:#CC0000;line-height:1;font-variant-numeric:tabular-nums}
+.stats .lab{margin-top:10px;font-size:17px;color:#777777;line-height:1.4}
+
+/* 通栏图注（图形页/架构图页图下说明行） */
+.capnote{position:absolute;left:20px;bottom:26px;width:1880px;font-size:17px;
+         color:#777777;line-height:1.65}
+.capnote b{color:#333333;font-weight:700}
+
+/* ---------------- 封面 / 目录 / 落版 ---------------- */
+.cover-inner{position:absolute;left:20px;top:230px;width:1880px}
+.cover-inner h1{margin:0;font-size:84px;font-weight:700;color:#333333;line-height:1.15}
+.cover-inner .csub{margin:28px 0 0;font-size:32px;font-weight:400;color:#555555;line-height:1.5}
+.cover-inner .cline{width:120px;height:5px;background:#CC0000;margin:44px 0 36px}
+.cover-inner .cmeta{font-size:22px;color:#A3A3A3;line-height:1.9}
+.toc{position:absolute;left:20px;top:230px;width:1880px;display:grid;grid-template-columns:1fr 1fr;gap:34px 80px}
+.toc .item{border-top:1px solid #CCCCCC;padding-top:18px}
+.toc .no{font-size:22px;font-weight:700;color:#CC0000}
+.toc .nm{margin-top:8px;font-size:34px;font-weight:700;color:#333333}
+.toc .ds{margin-top:10px;font-size:20px;color:#777777;line-height:1.5}
+.end-inner{position:absolute;left:20px;top:300px;width:1880px}
+.end-inner h1{margin:0;font-size:64px;font-weight:700;color:#333333;line-height:1.2}
+.end-inner .line{width:120px;height:5px;background:#CC0000;margin:36px 0 32px}
+.end-inner p{margin:0 0 14px;font-size:22px;color:#555555;line-height:1.7}
+.end-inner .note{margin-top:36px;font-size:18px;color:#A3A3A3;line-height:1.7}
+
+/* ===================== 交互层 ===================== */
+.dots{position:fixed;right:22px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;
+      gap:9px;z-index:20}
+.dots i{display:block;width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.45);cursor:pointer}
+.dots i.on{background:#CC0000;transform:scale(1.35)}
+.pagerbar{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:20;
+          font-size:14px;color:rgba(255,255,255,.85);background:rgba(0,0,0,.42);padding:6px 16px;border-radius:14px;
+          letter-spacing:1px}
+.notebar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:rgba(17,20,24,.94);color:#E8E8E8;
+         padding:18px 28px 22px;font-size:15px;line-height:1.75;display:none}
+.notebar.on{display:block}
+.notebar b{color:#F0A020;font-weight:500;margin-right:10px}
+.notebar .nb-cap{font-size:13px;color:#8A9099;margin-bottom:8px}
+
+/* ===================== 打印 / ?all 模式 ===================== */
+body.all{overflow:auto;background:#FFFFFF}
+body.all .stage{position:static;transform:none!important;width:auto;height:auto}
+body.all .page{display:block!important;position:relative;margin:0 auto;page-break-after:always;break-after:page}
+body.all .dots,body.all .pagerbar,body.all .notebar{display:none!important}
+@page{size:1920px 1080px;margin:0}
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+<!--PAGES-->
+</div>
+
+<nav class="dots" id="dots"></nav>
+<div class="pagerbar" id="pager"></div>
+<div class="notebar" id="notebar"></div>
+
+<script>
+(function(){
+  var ALL = new URLSearchParams(location.search).has('all');
+  if (ALL) document.body.classList.add('all');
+
+  var stage = document.getElementById('stage');
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var dots  = document.getElementById('dots');
+  var pager = document.getElementById('pager');
+  var notebar = document.getElementById('notebar');
+  var cur = 0, notesOn = false;
+
+  function fit(){
+    if (ALL) return;
+    var s = Math.min(innerWidth/1920, innerHeight/1080);
+    var x = (innerWidth  - 1920*s)/2;
+    var y = (innerHeight - 1080*s)/2;
+    stage.style.transform = 'translate('+x+'px,'+y+'px) scale('+s+')';
+  }
+  addEventListener('resize', fit);
+
+  function show(i){
+    if (i < 0 || i >= pages.length) return;
+    cur = i;
+    pages.forEach(function(p, k){ p.classList.toggle('on', k === i); });
+    Array.prototype.forEach.call(dots.children, function(d, k){ d.classList.toggle('on', k === i); });
+    pager.textContent = (i+1) + ' / ' + pages.length;
+    var nt = pages[i].getAttribute('data-notes') || '';
+    notebar.innerHTML = nt
+      ? '<div class="nb-cap">演讲备注 · 按 N 隐藏</div><div><b>' + (i+1) + '</b>' + nt + '</div>'
+      : '<div class="nb-cap">本页未写备注</div>';
+  }
+
+  pages.forEach(function(p, i){
+    var d = document.createElement('i');
+    d.title = (i+1) + '. ' + (p.getAttribute('data-title') || '');
+    d.onclick = function(){ show(i); };
+    dots.appendChild(d);
+  });
+
+  addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault(); show(cur+1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault(); show(cur-1);
+    } else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(pages.length-1); }
+    else if (e.key === 'n' || e.key === 'N') { notesOn = !notesOn; notebar.classList.toggle('on', notesOn); }
+  });
+
+  var x0 = null;
+  addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  addEventListener('touchend', function(e){
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 60) show(dx < 0 ? cur+1 : cur-1);
+    x0 = null;
+  }, {passive:true});
+
+  if (!ALL) { fit(); show(0); }
+})();
+</script>
+</body>
+</html>

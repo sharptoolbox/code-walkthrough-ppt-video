@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>UI 骨架 · 表单录入页（浅色）</title>
+<!--
+  ============================================================================
+  shell-form-light.html —— 表单录入页骨架（1600×900，浅色）
+  版式：顶栏 60 + 侧栏 230 + 主区 1370（主信息表单 + 明细表格 + 底部操作条）
+  适合讲：录入/编辑/提单类功能（校验规则多、需要标出"哪一处是强校验"）
+  铁律：数据全部仿真；明细表格的行数控制在 3~4 行，别把页面撑爆
+  ============================================================================
+-->
+<style>
+:root{
+  --bg-app:#EEF2F6; --bg-panel:#FFFFFF; --bg-muted:#F7F9FC; --bg-subtle:#E9EEF7;
+  --border:#D5DCE6; --border-soft:#E6EBF2;
+  --text-main:#0F172A; --text-2:#475467; --text-3:#667085;
+  --primary:#155EEF; --primary-soft:rgba(21,94,239,.10); --nav-bg:#0F172A;
+  --ok:#157F3D; --ok-soft:#ECFDF3; --warn:#C97A10; --warn-soft:#FFF7E6;
+  --danger:#C4320A; --danger-soft:#FEF3F2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:900px;overflow:hidden}
+body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;
+     color:var(--text-main);background:var(--bg-app)}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.app{display:flex;flex-direction:column;height:900px}
+.hd{height:60px;flex:0 0 60px;background:var(--nav-bg);color:#fff;display:flex;align-items:center;
+    justify-content:space-between;padding:0 26px}
+.hd-l{display:flex;align-items:center;gap:14px}
+.mark{width:34px;height:34px;border-radius:9px;background:#2F6DF6;display:flex;align-items:center;
+      justify-content:center;font-size:17px;font-weight:600}
+.tt{font-size:20px;font-weight:600;line-height:1.2}
+.st{font-size:14px;color:rgba(255,255,255,.68);margin-top:2px}
+.hd-r{display:flex;align-items:center;gap:12px;font-size:16px}
+.gbtn{height:34px;padding:0 15px;border-radius:9px;border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.07);font-size:15px}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2F6DF6;display:flex;align-items:center;
+        justify-content:center;font-size:15px;font-weight:600}
+.wk{flex:1;display:flex;min-height:0}
+.sb{width:230px;flex:0 0 230px;background:var(--bg-panel);border-right:1px solid var(--border);padding:16px 0}
+.nv{display:flex;align-items:center;gap:10px;height:46px;padding:0 20px;font-size:18px;color:var(--text-2)}
+.nv .ic{width:18px;text-align:center;color:var(--text-3);font-size:15px}
+.nv.grp{font-weight:600;color:var(--text-main);font-size:19px}
+.nv.sub{padding-left:46px;font-size:17px}
+.nv.on{background:var(--primary-soft);color:var(--primary);font-weight:600;box-shadow:inset 3px 0 0 var(--primary)}
+.nv.on .ic{color:var(--primary)}
+
+.ct{flex:1;min-width:0;display:flex;flex-direction:column;padding:14px 18px 16px}
+.tabs{display:flex;gap:8px;margin-bottom:12px}
+.tab{height:40px;padding:0 18px;border-radius:8px 8px 0 0;background:var(--bg-subtle);font-size:17px;
+     color:var(--text-2);display:flex;align-items:center;gap:10px}
+.tab.on{background:var(--bg-panel);color:var(--text-main);font-weight:600;box-shadow:inset 0 -3px 0 var(--primary)}
+.x{width:16px;height:16px;border-radius:50%;background:rgba(15,23,42,.12);color:#fff;font-size:11px;
+   display:flex;align-items:center;justify-content:center}
+
+.panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.bar{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+     border-bottom:1px solid var(--border-soft)}
+.bar h3{font-size:20px;font-weight:600}
+.bar .meta{font-size:15px;color:var(--text-3)}
+.bar .inline{display:flex;align-items:center;gap:14px}
+.mini{height:32px;padding:0 13px;border-radius:6px;border:1px solid var(--border);background:#fff;
+      font-size:15px;color:var(--text-2);display:flex;align-items:center;gap:6px}
+
+/* 主信息表单：3 列网格 */
+.form{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 20px;padding:18px}
+.fd{display:flex;flex-direction:column;gap:6px}
+.fd label{font-size:15px;color:var(--text-3)}
+.fd label i{color:var(--danger);font-style:normal;margin-right:3px}
+.fd .ctrl{height:38px;border:1px solid var(--border);border-radius:6px;background:#fff;
+          display:flex;align-items:center;padding:0 12px;font-size:16px;color:var(--text-main)}
+.fd .ctrl.ro{background:var(--bg-muted);color:var(--text-3);font-variant-numeric:tabular-nums}
+.fd .ctrl.sel::after{content:"⌄";margin-left:auto;color:var(--text-3);font-size:13px}
+.hint{font-size:13.5px;color:var(--text-3);margin-top:-2px}
+
+/* 明细表格 */
+.tbl{width:100%;border-collapse:collapse;font-size:16px}
+.tbl th{height:40px;background:var(--bg-muted);color:var(--text-3);font-size:15px;font-weight:600;
+        text-align:left;padding:0 14px;border-bottom:1px solid var(--border)}
+.tbl td{height:44px;padding:0 14px;border-bottom:1px solid var(--border-soft);color:var(--text-main)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl .cell{border:1px solid var(--border);border-radius:5px;height:32px;display:flex;align-items:center;
+           padding:0 10px;font-size:16px;background:#fff}
+.tbl .cell.ro{background:var(--bg-muted);color:var(--text-3);justify-content:flex-end}
+.del{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);color:var(--danger);
+     background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+
+/* 底部操作条 */
+.acts{height:66px;flex:0 0 66px;margin-top:12px;background:var(--bg-panel);border:1px solid var(--border);
+      border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 18px}
+.acts .alert{font-size:15px;color:var(--text-3)}
+.btn{height:38px;padding:0 20px;border-radius:7px;font-size:16px;font-weight:500;display:flex;
+     align-items:center;gap:8px}
+.btn.pri{background:var(--primary);color:#fff}
+.btn.sec{background:#fff;border:1px solid var(--border);color:var(--text-2)}
+.btnwrap{display:flex;gap:12px}
+.ratio{font-size:16px;color:var(--text-3)}
+.ratio b{color:var(--ok);font-weight:600}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hd">
+    <div class="hd-l">
+      <div class="mark">系</div>
+      <div><div class="tt">示例业务管理系统</div><div class="st">子标题 · 技术栈关键词</div></div>
+    </div>
+    <div class="hd-r">
+      <button class="gbtn">隐藏侧栏</button><button class="gbtn">显示助理</button>
+      <div class="avatar">管</div><button class="gbtn">退出</button>
+    </div>
+  </header>
+
+  <div class="wk">
+    <!--SWAP-START 内容区起点：把这些标记之间的内容换成本页的侧栏+主区 -->
+<aside class="sb">
+      <div class="nv grp"><span class="ic">▤</span>业务分组一</div>
+      <div class="nv sub on"><span class="ic">＋</span>录入入口</div>
+      <div class="nv sub"><span class="ic">◇</span>功能入口二</div>
+      <div class="nv sub"><span class="ic">⌕</span>信息查询</div>
+      <div class="nv grp" style="margin-top:10px"><span class="ic">▤</span>业务分组二</div>
+      <div class="nv sub"><span class="ic">▤</span>功能入口三</div>
+    </aside>
+
+    <section class="ct">
+      <div class="tabs">
+        <div class="tab on">录入入口 <span class="x">×</span></div>
+        <div class="tab">信息查询 <span class="x">×</span></div>
+      </div>
+
+      <!-- 主信息 -->
+      <div class="panel" style="flex:0 0 auto">
+        <div class="bar"><h3>主信息</h3><span class="meta">带 <i style="color:#C4320A">*</i> 为必填</span></div>
+        <div class="form">
+          <div class="fd"><label><i>*</i>单号（自动生成）</label><div class="ctrl ro">NO-2026-1000-0006</div></div>
+          <div class="fd"><label><i>*</i>名称</label><div class="ctrl">示例条目名称</div></div>
+          <div class="fd"><label><i>*</i>分类</label><div class="ctrl sel">分类甲</div></div>
+          <div class="fd"><label><i>*</i>关联方</label><div class="ctrl sel">示例单位甲</div></div>
+          <div class="fd"><label><i>*</i>归属部门</label><div class="ctrl sel">业务一部</div></div>
+          <div class="fd"><label><i>*</i>责任人</label><div class="ctrl sel">示例人员</div></div>
+          <div class="fd"><label><i>*</i>日期</label><div class="ctrl">2026-10-13</div></div>
+          <div class="fd"><label><i>*</i>总额</label><div class="ctrl">2,400,000.00</div></div>
+          <div class="fd"><label>辅助金额</label><div class="ctrl">1,560,000.00</div></div>
+        </div>
+      </div>
+
+      <!-- 明细 -->
+      <div class="panel" style="flex:1;min-height:0;margin-top:12px;display:flex;flex-direction:column">
+        <div class="bar">
+          <h3>明细行</h3>
+          <div class="inline">
+            <span class="ratio">合计 <b>2,400,000.00</b></span>
+            <button class="mini">＋ 新增行</button>
+          </div>
+        </div>
+        <div style="flex:1;min-height:0;overflow:hidden">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:90px">序号</th><th style="width:28%">明细项名称</th>
+                <th style="width:150px">数量</th><th style="width:200px">金额</th><th style="width:70px">操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="cell">1</div></td>
+                <td><div class="cell">明细项一</div></td>
+                <td><div class="cell">12</div></td>
+                <td><div class="cell ro">800,000.00</div></td>
+                <td><div class="del">🗑</div></td>
+              </tr>
+              <tr>
+                <td><div class="cell">2</div></td>
+                <td><div class="cell">明细项二</div></td>
+                <td><div class="cell">24</div></td>
+                <td><div class="cell ro">900,000.00</div></td>
+                <td><div class="del">🗑</div></td>
+              </tr>
+              <tr>
+                <td><div class="cell">3</div></td>
+                <td><div class="cell">明细项三</div></td>
+                <td><div class="cell">18</div></td>
+                <td><div class="cell ro">700,000.00</div></td>
+                <td><div class="del">🗑</div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 操作条 -->
+      <div class="acts">
+        <div class="alert">保存后系统会自动生成操作记录。</div>
+        <div class="btnwrap">
+          <button class="btn pri">保存</button>
+          <button class="btn sec">转到查询</button>
+        </div>
+      </div>
+    </section>
+<!--SWAP-END 内容区终点-->
+  </div>
+</div>
+</body>
+</html>

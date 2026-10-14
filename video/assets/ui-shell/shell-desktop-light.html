@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+<!--
+  ============================================================================
+   中后台管理系统 · 浅色骨架（1600×900 直接可截图）
+  ============================================================================
+   什么时候用：原系统本身是浅色，且用户要求"就要还原原样"时。
+   默认建议用深色骨架（shell-desktop-dark.html）——视频整体是深色背景，
+   中间插一张浅色页面会很跳。
+
+   用法与深色版完全一致：复制 → 改菜单/标题/表头/状态文案 → shoot_page.py
+   ============================================================================
+-->
+<head>
+<meta charset="utf-8">
+<title>界面示意</title>
+<style>
+  /* ↓↓↓ 配色 ↓↓↓ */
+  :root{
+    --bg:#eef1f6;
+    --panel:#ffffff;
+    --panel2:#f7f9fc;
+    --card:#ffffff;
+    --line:#e2e7f0;
+    --line2:#f0f3f8;
+    --text:#1f2a3a;
+    --text2:#4a5769;
+    --dim:#8b95a6;
+    --primary:#1677ff;
+    --primary-lite:#1677ff;
+    --accent:#13c2a3;
+    --warn:#e79b21;
+    --danger:#e14b4b;
+    --ok:#12a06a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1600px;height:900px;overflow:hidden}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:"Microsoft YaHei","Microsoft YaHei UI","PingFang SC",sans-serif;
+    font-size:16px;line-height:1.5;display:flex;flex-direction:column;
+  }
+
+  .topbar{height:56px;flex:0 0 56px;background:var(--panel);border-bottom:1px solid var(--line);
+    display:flex;align-items:center;padding:0 30px;gap:14px}
+  .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--primary),var(--accent))}
+  .brand{font-size:19px;font-weight:700;letter-spacing:1px}
+  .topbar .sep{flex:1}
+  .user{display:flex;align-items:center;gap:10px;color:var(--text2);font-size:15px}
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--primary);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:13px}
+
+  .body{flex:1;display:flex;min-height:0}
+  .side{width:224px;flex:0 0 224px;background:var(--panel);border-right:1px solid var(--line);
+    padding:14px 12px 14px 22px;overflow:hidden}
+  .side .grp{font-size:13px;color:var(--dim);letter-spacing:2px;padding:12px 8px 8px}
+  .side .item{height:42px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:8px;
+    color:var(--text2);font-size:17px}
+  .side .item .dot{width:6px;height:6px;border-radius:50%;background:#c8d1de;flex:0 0 6px}
+  .side .item.on{background:#e8f1ff;color:var(--primary);font-weight:600}
+  .side .item.on .dot{background:var(--primary)}
+  .side .sub{padding-left:36px;color:var(--dim);font-size:15px;height:36px;display:flex;align-items:center}
+
+  .main{flex:1;min-width:0;background:var(--panel2);padding:20px 24px;display:flex;flex-direction:column;gap:14px}
+  .crumb{font-size:14px;color:var(--dim)}
+  .ptitle{display:flex;align-items:center;gap:14px}
+  .ptitle h1{font-size:22px;font-weight:700;letter-spacing:1px}
+  .tag{font-size:13px;padding:2px 10px;border-radius:10px;background:#e6fbf5;color:var(--ok);border:1px solid #b7ecda}
+  .ptitle .sp{flex:1}
+  .btn{height:36px;padding:0 18px;border-radius:7px;font-size:15px;display:flex;align-items:center;
+    border:1px solid var(--line);color:var(--text2);background:#fff}
+  .btn.pri{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:600}
+
+  .filter{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;
+    display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+  .fld{display:flex;align-items:center;gap:9px;font-size:15px;color:var(--text2)}
+  .fld label{color:var(--dim)}
+  .ctrl{height:34px;min-width:180px;border:1px solid var(--line);border-radius:7px;background:#fff;
+    display:flex;align-items:center;padding:0 12px;color:var(--text)}
+  .ctrl.sm{min-width:130px}
+  .caret{margin-left:auto;color:var(--dim);font-size:12px}
+
+  /* 表格：绝对定位切开三段，高度确定 */
+  .tablewrap{flex:1;min-height:0;position:relative;background:var(--card);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden}
+  .tbar{position:absolute;left:0;right:0;top:0;height:52px;display:flex;align-items:center;gap:12px;
+    padding:0 18px;border-bottom:1px solid var(--line)}
+  .tbar .sp{flex:1}
+  .cnt{font-size:14px;color:var(--dim)}
+  .tbody{position:absolute;left:0;right:0;top:52px;bottom:54px;overflow:hidden}
+  .pager{position:absolute;left:0;right:0;bottom:0;height:54px;display:flex;align-items:center;gap:8px;
+    padding:0 18px;border-top:1px solid var(--line);color:var(--text2);font-size:15px}
+  .pager .sp{flex:1}
+  .pager .pg{min-width:34px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;background:#fff}
+  .pager .pg.on{background:var(--primary);border-color:var(--primary);color:#fff}
+
+  table{width:100%;border-collapse:collapse;table-layout:fixed}
+  th{height:44px;text-align:left;font-size:15px;font-weight:600;color:var(--text2);
+    background:#f2f5fa;border-bottom:1px solid var(--line);padding:0 16px}
+  td{height:46px;font-size:16px;color:var(--text);border-bottom:1px solid var(--line2);padding:0 16px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mono{font-variant-numeric:tabular-nums}
+  .st{display:inline-block;font-size:14px;padding:3px 12px;border-radius:12px;border:1px solid}
+  .st.ok{color:var(--ok);border-color:#b7ecda;background:#e6fbf5}
+  .st.wait{color:var(--warn);border-color:#f6dfb4;background:#fdf5e6}
+  .st.run{color:var(--primary);border-color:#bcd9ff;background:#e8f1ff}
+  .st.bad{color:var(--danger);border-color:#f7c9c9;background:#fdeaea}
+  .st.off{color:var(--dim);border-color:var(--line);background:#f4f6fa}
+  .lnk{color:var(--primary);font-size:15px}
+  .lnk+.lnk{margin-left:14px}
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo"></div>
+    <div class="brand">运营管理平台</div>                 <!-- ← 品牌名 -->
+    <div class="sep"></div>
+    <div class="user"><span>管理员</span><div class="avatar">管</div></div>
+  </div>
+
+  <div class="body">
+    <div class="side">
+      <div class="grp">业务管理</div>
+      <div class="item on"><span class="dot"></span>订单管理</div>       <!-- ← 当前页高亮 -->
+      <div class="sub">订单受理</div>
+      <div class="sub">库存校验</div>
+      <div class="sub">履约跟踪</div>
+      <div class="item"><span class="dot"></span>客户管理</div>
+      <div class="item"><span class="dot"></span>产品管理</div>
+      <div class="grp">数据分析</div>
+      <div class="item"><span class="dot"></span>经营看板</div>
+      <div class="item"><span class="dot"></span>报表中心</div>
+      <div class="grp">系统设置</div>
+      <div class="item"><span class="dot"></span>组织与权限</div>
+    </div>
+
+    <div class="main">
+      <div class="crumb">订单管理 / 订单受理</div>
+      <div class="ptitle">
+        <h1>订单受理</h1>
+        <span class="tag">已就绪</span>
+        <div class="sp"></div>
+        <div class="btn">导出</div>
+        <div class="btn pri">＋ 新建订单</div>
+      </div>
+
+      <div class="filter">
+        <div class="fld"><label>订单号</label><div class="ctrl">请输入订单号</div></div>
+        <div class="fld"><label>客户</label><div class="ctrl sm">全部<div class="caret">▾</div></div></div>
+        <div class="fld"><label>状态</label><div class="ctrl sm">全部<div class="caret">▾</div></div></div>
+        <div class="fld"><label>下单日期</label><div class="ctrl sm">2026-10-01 ~ 2026-10-13</div></div>
+        <div class="btn pri">查询</div>
+        <div class="btn">重置</div>
+      </div>
+
+      <div class="tablewrap">
+        <div class="tbar">
+          <div class="cnt">共 <b style="color:var(--text)">128</b> 条记录</div>
+          <div class="sp"></div>
+          <div class="btn">批量审核</div>
+          <div class="btn">批量导出</div>
+        </div>
+        <div class="tbody">
+          <table>
+            <colgroup>
+              <col style="width:150px"><col style="width:170px"><col style="width:150px">
+              <col style="width:210px"><col style="width:130px">
+              <col style="width:120px"><col style="width:110px"><col style="width:150px">
+            </colgroup>
+            <thead>
+              <tr><th>订单号</th><th>客户名称</th><th>合同号</th><th>金额（元）</th>
+                <th>下单日期</th><th>状态</th><th>负责人</th><th>操作</th></tr>
+            </thead>
+            <tbody>
+              <!-- 仿真数据，不要用真实客户 -->
+              <tr><td class="mono">SO20261013001</td><td>示例客户甲有限公司</td><td class="mono">HT2026-0187</td>
+                <td class="mono">1,280,000.00</td><td>2026-10-13</td>
+                <td><span class="st ok">已审核</span></td><td>张 三</td>
+                <td><span class="lnk">详情</span><span class="lnk">编辑</span></td></tr>
+              <tr><td class="mono">SO20261013002</td><td>示例客户乙科技有限公司</td><td class="mono">HT2026-0188</td>
+                <td class="mono">564,000.00</td><td>2026-10-13</td>
+                <td><span class="st wait">待审核</span></td><td>李 四</td>
+                <td><span class="lnk">详情</span><span class="lnk">审核</span></td></tr>
+              <tr><td class="mono">SO20261012007</td><td>示例客户丙信息技术</td><td class="mono">HT2026-0179</td>
+                <td class="mono">3,020,000.00</td><td>2026-10-12</td>
+                <td><span class="st run">履约中</span></td><td>王 五</td>
+                <td><span class="lnk">详情</span><span class="lnk">跟踪</span></td></tr>
+              <tr><td class="mono">SO20261012006</td><td>示例客户丁系统集成</td><td class="mono">HT2026-0178</td>
+                <td class="mono">876,500.00</td><td>2026-10-12</td>
+                <td><span class="st ok">已完成</span></td><td>赵 六</td>
+                <td><span class="lnk">详情</span></td></tr>
+              <tr><td class="mono">SO20261011011</td><td>示例客户戊软件服务</td><td class="mono">HT2026-0171</td>
+                <td class="mono">245,000.00</td><td>2026-10-11</td>
+                <td><span class="st bad">已驳回</span></td><td>钱 七</td>
+                <td><span class="lnk">详情</span><span class="lnk">编辑</span></td></tr>
+              <tr><td class="mono">SO20261011009</td><td>示例客户己网络科技</td><td class="mono">HT2026-0169</td>
+                <td class="mono">1,030,000.00</td><td>2026-10-11</td>
+                <td><span class="st off">已作废</span></td><td>孙 八</td>
+                <td><span class="lnk">详情</span></td></tr>
+              <tr><td class="mono">SO20261010004</td><td>示例客户庚数据服务</td><td class="mono">HT2026-0162</td>
+                <td class="mono">682,000.00</td><td>2026-10-10</td>
+                <td><span class="st ok">已完成</span></td><td>周 九</td>
+                <td><span class="lnk">详情</span></td></tr>
+              <tr><td class="mono">SO20261010002</td><td>示例客户辛智造集团</td><td class="mono">HT2026-0160</td>
+                <td class="mono">4,150,000.00</td><td>2026-10-10</td>
+                <td><span class="st run">履约中</span></td><td>吴 十</td>
+                <td><span class="lnk">详情</span><span class="lnk">跟踪</span></td></tr>
+              <tr><td class="mono">SO20261009005</td><td>示例客户壬物联网</td><td class="mono">HT2026-0155</td>
+                <td class="mono">1,760,000.00</td><td>2026-10-09</td>
+                <td><span class="st ok">已完成</span></td><td>郑十一</td>
+                <td><span class="lnk">详情</span></td></tr>
+              <tr><td class="mono">SO20261009003</td><td>示例客户癸云计算</td><td class="mono">HT2026-0153</td>
+                <td class="mono">938,000.00</td><td>2026-10-09</td>
+                <td><span class="st wait">待审核</span></td><td>冯十二</td>
+                <td><span class="lnk">详情</span><span class="lnk">审核</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <span>每页 20 条</span>
+          <div class="sp"></div>
+          <div class="pg">‹</div><div class="pg on">1</div><div class="pg">2</div>
+          <div class="pg">3</div><div class="pg">…</div><div class="pg">7</div><div class="pg">›</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

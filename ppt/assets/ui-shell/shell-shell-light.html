@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>UI 骨架 · 三栏工作台外壳（浅色）</title>
+<!--
+  ============================================================================
+  shell-shell-light.html —— 三栏工作台外壳骨架（1600×900，浅色）
+  用途：讲「系统整体长什么样」、AI 面板能力、操作日志面板
+  用法：
+    1. cp 到 <工程>/ui/xx.html
+    2. 改 :root 里的品牌色（跟原系统 CSS 变量走）
+    3. 按 references/02-ui-redraw-light.md 的「还原清单」改文案/列/状态标签
+    4. python "<skill>/scripts/shoot_page.py" --in ui --out images
+  铁律：结构 1:1、文案 1:1、数据全部仿真（不得出现真实客户/账号/密钥/内网地址）
+  ============================================================================
+-->
+<style>
+:root{
+  --bg-app:#EEF2F6; --bg-panel:#FFFFFF; --bg-muted:#F7F9FC; --bg-subtle:#E9EEF7;
+  --border:#D5DCE6; --border-soft:#E6EBF2;
+  --text-main:#0F172A; --text-2:#475467; --text-3:#667085;
+  --primary:#155EEF; --primary-soft:rgba(21,94,239,.10);
+  --nav-bg:#0F172A;
+  --ok:#157F3D; --ok-soft:#ECFDF3;
+  --warn:#C97A10; --warn-soft:#FFF7E6;
+  --danger:#C4320A; --danger-soft:#FEF3F2;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:900px;overflow:hidden}
+body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:16px;
+     color:var(--text-main);background:var(--bg-app)}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.app{display:flex;flex-direction:column;height:900px}
+
+/* ---------- 顶栏 60px ---------- */
+.hd{height:60px;flex:0 0 60px;background:var(--nav-bg);color:#fff;display:flex;align-items:center;
+    justify-content:space-between;padding:0 26px}
+.hd-l{display:flex;align-items:center;gap:14px}
+.mark{width:34px;height:34px;border-radius:9px;background:#2F6DF6;
+      display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#fff}
+.tt{font-size:20px;font-weight:600;line-height:1.2}
+.st{font-size:14px;color:rgba(255,255,255,.68);margin-top:2px}
+.hd-r{display:flex;align-items:center;gap:12px;font-size:16px}
+.gbtn{height:34px;padding:0 15px;border-radius:9px;border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.07);color:#fff;font-size:15px}
+.avatar{width:32px;height:32px;border-radius:50%;background:#2F6DF6;display:flex;align-items:center;
+        justify-content:center;font-size:15px;font-weight:600}
+
+/* ---------- 三栏主体 ---------- */
+.wk{flex:1;display:flex;min-height:0}
+
+/* 侧栏 230px */
+.sb{width:230px;flex:0 0 230px;background:var(--bg-panel);border-right:1px solid var(--border);
+    padding:16px 0;overflow:hidden}
+.nv{display:flex;align-items:center;gap:10px;height:46px;padding:0 20px;font-size:18px;color:var(--text-2)}
+.nv .ic{width:18px;text-align:center;color:var(--text-3);font-size:15px}
+.nv.grp{font-weight:600;color:var(--text-main);font-size:19px}
+.nv.sub{padding-left:46px;font-size:17px}
+.nv.on{background:var(--primary-soft);color:var(--primary);font-weight:600;
+       box-shadow:inset 3px 0 0 var(--primary)}
+.nv.on .ic{color:var(--primary)}
+
+/* 中栏 */
+.ct{flex:1;min-width:0;display:flex;flex-direction:column;padding:14px 16px 0}
+.tabs{display:flex;gap:8px;flex:0 0 auto;margin-bottom:12px}
+.tab{height:40px;padding:0 18px;border-radius:8px 8px 0 0;background:var(--bg-subtle);
+     font-size:17px;color:var(--text-2);display:flex;align-items:center;gap:10px}
+.tab.on{background:var(--bg-panel);color:var(--text-main);font-weight:600;box-shadow:inset 0 -3px 0 var(--primary)}
+.x{width:16px;height:16px;border-radius:50%;background:rgba(15,23,42,.12);color:#fff;font-size:11px;
+   display:flex;align-items:center;justify-content:center}
+
+.main{flex:1;min-height:0;background:var(--bg-panel);border:1px solid var(--border);border-radius:8px;
+      display:flex;flex-direction:column;overflow:hidden}
+.bar{height:52px;flex:0 0 52px;display:flex;align-items:center;justify-content:space-between;
+     padding:0 18px;border-bottom:1px solid var(--border-soft)}
+.bar h3{font-size:20px;font-weight:600}
+.bar .meta{font-size:15px;color:var(--text-3)}
+.toolbar{display:flex;gap:10px}
+.btn{height:34px;padding:0 15px;border-radius:7px;font-size:15px;font-weight:500}
+.btn.pri{background:var(--primary);color:#fff}
+.btn.sec{background:#fff;border:1px solid var(--border);color:var(--text-2)}
+
+.filters{display:flex;gap:14px;padding:14px 18px;border-bottom:1px solid var(--border-soft);flex-wrap:wrap}
+.fd{display:flex;flex-direction:column;gap:6px;min-width:150px}
+.fd label{font-size:14px;color:var(--text-3)}
+.fd .ctrl{height:34px;border:1px solid var(--border);border-radius:6px;background:var(--bg-muted);
+          display:flex;align-items:center;padding:0 11px;font-size:16px;color:var(--text-2)}
+
+.tblwrap{flex:1;min-height:0;position:relative;overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:16px}
+.tbl th{position:sticky;top:0;height:40px;background:var(--bg-muted);color:var(--text-3);
+        font-size:15px;font-weight:600;text-align:left;padding:0 12px;border-bottom:1px solid var(--border)}
+.tbl td{height:42px;padding:0 12px;border-bottom:1px solid var(--border-soft);color:var(--text-2);
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbl tr.on td{background:var(--bg-subtle)}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl .strong{color:var(--text-main);font-weight:600}
+.tg{display:inline-block;height:24px;line-height:24px;padding:0 10px;border-radius:12px;font-size:14px;font-weight:500}
+.tg.ok{background:var(--ok-soft);color:var(--ok)}
+.tg.warn{background:var(--warn-soft);color:var(--warn)}
+.tg.bad{background:var(--danger-soft);color:var(--danger)}
+.tg.gray{background:#EEF1F5;color:var(--text-3)}
+.pager{height:48px;flex:0 0 48px;display:flex;align-items:center;justify-content:space-between;
+       padding:0 18px;border-top:1px solid var(--border-soft);font-size:15px;color:var(--text-3)}
+
+/* 操作日志面板（中栏底部）200px */
+.evt{height:200px;flex:0 0 200px;margin-top:12px;background:var(--bg-panel);border:1px solid var(--border);
+     border-radius:8px;display:flex;flex-direction:column;overflow:hidden;margin-bottom:12px}
+.evt .bar{height:44px;flex:0 0 44px}
+.evt .bar h3{font-size:18px}
+.evtbody{flex:1;min-height:0;padding:12px 18px;display:flex;gap:14px;overflow:hidden}
+.ecard{flex:1;border:1px solid var(--border-soft);border-radius:7px;padding:11px 13px;min-width:0}
+.ecard .eh{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.ecard .eh b{font-size:16px;color:var(--text-main)}
+.ecard .eline{font-size:14px;color:var(--text-2);line-height:1.85}
+.ecard .eline .s{color:var(--text-3)}
+.ecard .em{font-size:13px;color:var(--text-3);margin-bottom:6px}
+
+/* 右栏 AI 面板 380px */
+.ai{width:380px;flex:0 0 380px;background:#FAFBFC;border-left:1px solid var(--border);
+    display:flex;flex-direction:column;margin:0}
+.aihd{height:60px;flex:0 0 60px;display:flex;align-items:center;gap:12px;padding:0 18px;
+      background:var(--bg-panel);border-bottom:1px solid var(--border)}
+.aihd .mk{width:34px;height:34px;border-radius:9px;background:var(--primary-soft);color:var(--primary);
+          display:flex;align-items:center;justify-content:center;font-size:16px}
+.aihd b{font-size:18px;display:block;line-height:1.25}
+.aihd span{font-size:13px;color:var(--text-3)}
+.msgs{flex:1;min-height:0;padding:16px;display:flex;flex-direction:column;gap:14px;overflow:hidden}
+.msg{display:flex;flex-direction:column;gap:6px}
+.msg .who{font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:6px}
+.bub{background:#fff;border:1px solid var(--border-soft);border-radius:9px;padding:11px 13px;
+     font-size:15px;color:var(--text-2);line-height:1.65}
+.msg.me .bub{background:var(--primary-soft);border-color:transparent;color:#123C99}
+.mini{margin-top:9px;border:1px solid var(--border-soft);border-radius:7px;overflow:hidden}
+.mini table{width:100%;border-collapse:collapse;font-size:13px}
+.mini th{background:var(--bg-muted);color:var(--text-3);font-weight:600;text-align:left;padding:6px 9px}
+.mini td{padding:6px 9px;color:var(--text-2);border-top:1px solid var(--border-soft);white-space:nowrap}
+.aiin{border-top:1px solid var(--border);padding:12px 16px 14px;background:var(--bg-panel)}
+.aiin .box{border:1px solid var(--border);border-radius:9px;padding:11px 12px;font-size:15px;
+           color:var(--text-3);background:var(--bg-muted);min-height:66px;position:relative}
+.aiin .send{position:absolute;right:9px;bottom:9px;width:32px;height:32px;border-radius:8px;
+            background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px}
+.aiin .tip{font-size:13px;color:var(--text-3);margin-top:9px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ 顶栏：改品牌名与副标题 ============ -->
+  <header class="hd">
+    <div class="hd-l">
+      <div class="mark">系</div>
+      <div>
+        <div class="tt">示例业务管理系统</div>
+        <div class="st">子标题 · 技术栈关键词</div>
+      </div>
+    </div>
+    <div class="hd-r">
+      <button class="gbtn">隐藏侧栏</button>
+      <button class="gbtn">隐藏助理</button>
+      <div class="avatar">管</div>
+      <button class="gbtn">退出</button>
+    </div>
+  </header>
+
+  <div class="wk">
+
+    <!-- ============ 侧栏：改成源码里的真实菜单层级 ============ -->
+    <!--SWAP-START 内容区起点：把这些标记之间的内容换成本页的侧栏+主区 -->
+<aside class="sb">
+      <div class="nv grp"><span class="ic">▤</span>业务分组一</div>
+      <div class="nv sub"><span class="ic">＋</span>功能入口一</div>
+      <div class="nv sub on"><span class="ic">▤</span>功能入口二</div>
+      <div class="nv sub"><span class="ic">◇</span>功能入口三</div>
+      <div class="nv sub"><span class="ic">⌕</span>功能入口四</div>
+      <div class="nv grp" style="margin-top:10px"><span class="ic">▤</span>业务分组二</div>
+      <div class="nv sub"><span class="ic">▤</span>功能入口五</div>
+    </aside>
+
+    <!-- ============ 中栏 ============ -->
+    <section class="ct">
+      <div class="tabs">
+        <div class="tab on">功能入口二 <span class="x">×</span></div>
+        <div class="tab">功能入口一 <span class="x">×</span></div>
+      </div>
+
+      <div class="main">
+        <div class="bar">
+          <h3>列表标题</h3>
+          <div class="toolbar">
+            <button class="btn pri">主操作</button>
+            <button class="btn sec">次操作</button>
+          </div>
+        </div>
+
+        <div class="filters">
+          <div class="fd"><label>条件一</label><div class="ctrl">请输入</div></div>
+          <div class="fd"><label>条件二</label><div class="ctrl">全部</div></div>
+          <div class="fd"><label>条件三</label><div class="ctrl">全部</div></div>
+        </div>
+
+        <div class="tblwrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th style="width:16%">列一</th><th style="width:22%">列二</th>
+                <th style="width:14%">列三</th><th style="width:14%">列四</th>
+                <th style="width:14%">状态一</th><th style="width:20%">状态二</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 数据全部仿真：编号/名称/金额都自己编 -->
+              <tr class="on">
+                <td class="strong">NO-2026-0001</td><td>示例条目名称一</td>
+                <td>分类甲</td><td class="num">1,280,000.00</td>
+                <td><span class="tg warn">部分完成</span></td><td><span class="tg gray">未开始</span></td>
+              </tr>
+              <tr>
+                <td class="strong">NO-2026-0002</td><td>示例条目名称二</td>
+                <td>分类乙</td><td class="num">860,000.00</td>
+                <td><span class="tg ok">已完成</span></td><td><span class="tg ok">已完成</span></td>
+              </tr>
+              <tr>
+                <td class="strong">NO-2026-0003</td><td>示例条目名称三</td>
+                <td>分类甲</td><td class="num">340,000.00</td>
+                <td><span class="tg gray">未开始</span></td><td><span class="tg gray">未开始</span></td>
+              </tr>
+              <tr>
+                <td class="strong">NO-2026-0004</td><td>示例条目名称四</td>
+                <td>分类丙</td><td class="num">2,050,000.00</td>
+                <td><span class="tg ok">已完成</span></td><td><span class="tg warn">部分完成</span></td>
+              </tr>
+              <tr>
+                <td class="strong">NO-2026-0005</td><td>示例条目名称五</td>
+                <td>分类乙</td><td class="num">120,000.00</td>
+                <td><span class="tg bad">异常</span></td><td><span class="tg gray">未开始</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pager"><span>共 5 条</span><span>每页 10 条 · 第 1 / 1 页</span></div>
+      </div>
+
+      <!-- 操作日志面板：不需要就整块删掉 -->
+      <div class="evt">
+        <div class="bar"><h3>操作日志</h3><span class="meta">默认展示最近 3 条记录</span></div>
+        <div class="evtbody">
+          <div class="ecard">
+            <div class="eh"><b>记录一名称</b><span class="tg ok">已完成</span></div>
+            <div class="em">触发时间：2026-10-13 10:24 · 操作人：示例用户</div>
+            <div class="eline">· 收到业务动作，开始处理</div>
+            <div class="eline">· 按规则展开后续阶段</div>
+            <div class="eline">· 生成关联记录并落库</div>
+          </div>
+          <div class="ecard">
+            <div class="eh"><b>记录二名称</b><span class="tg ok">已完成</span></div>
+            <div class="em">触发时间：2026-10-13 10:11 · 操作人：示例用户</div>
+            <div class="eline">· 校验通过</div>
+            <div class="eline">· 累计值更新</div>
+          </div>
+          <div class="ecard">
+            <div class="eh"><b>记录三名称</b><span class="tg bad">失败</span></div>
+            <div class="em">触发时间：2026-10-13 09:58 · 操作人：示例用户</div>
+            <div class="eline">· 校验未通过：超出允许范围</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 右栏：AI 助理面板 ============ -->
+    <aside class="ai">
+      <div class="aihd">
+        <div class="mk">✦</div>
+        <div>
+          <b>智能助理</b>
+          <span>模型 + 工具调用 + 只读查询</span>
+        </div>
+      </div>
+      <div class="msgs">
+        <div class="msg">
+          <div class="who">◇ 助理</div>
+          <div class="bub">您好，可以直接让我打开业务页面、查询数据，或按维度生成统计图表。</div>
+        </div>
+        <div class="msg me">
+          <div class="who">◇ 我</div>
+          <div class="bub">按分类统计金额</div>
+        </div>
+        <div class="msg">
+          <div class="who">◇ 助理</div>
+          <div class="bub">
+            已按分类汇总，共 4 类。
+            <div class="mini">
+              <table>
+                <thead><tr><th>分类</th><th>金额</th></tr></thead>
+                <tbody>
+                  <tr><td>分类甲</td><td>1,620,000.00</td></tr>
+                  <tr><td>分类乙</td><td>980,000.00</td></tr>
+                  <tr><td>分类丙</td><td>2,050,000.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="aiin">
+        <div class="box">例如：查询记录、查看某条详情、按维度统计
+          <div class="send">➤</div>
+        </div>
+        <div class="tip">对话仅支持只读查询和页面跳转，写操作请使用固定业务页面。</div>
+      </div>
+    </aside>
+<!--SWAP-END 内容区终点-->
+
+  </div>
+</div>
+</body>
+</html>

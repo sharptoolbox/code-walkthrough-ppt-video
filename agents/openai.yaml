@@ -1,0 +1,4 @@
+interface:
+  display_name: "源码讲解 PPT / 视频"
+  short_description: "从现有源码生成可交付的产品讲解 HTML PPT 或中文视频"
+  default_prompt: "Use $code-walkthrough-ppt-video to inspect this source project and first ask me to choose PPT or video output."
